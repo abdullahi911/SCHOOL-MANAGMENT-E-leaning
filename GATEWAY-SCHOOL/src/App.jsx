@@ -4,7 +4,7 @@ import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SingUp";
-import Elearning from "./pages/E-learning";
+import Elearning from "./pages/Elearning";
 import Header from "./component/Header";
 import Footer from "./component/Footer";
 
