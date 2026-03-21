@@ -5,13 +5,18 @@ import Dashboard from "./pages/Dashboard";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SingUp";
 import Elearning from "./pages/Elearning";
+
+// NEW ADMIN IMPORTS
+import AdminPanel from "./dashboards/AdminPanel";
+import CreateStudent from "./dashboards/CreateStudent";
+import CreateTeacher from "./dashboards/CreateTeacher";
+
 import Header from "./component/Header";
 import Footer from "./component/Footer";
 
 const App = () => {
   return (
     <div className="flex flex-col min-h-screen bg-amber-50">
- 
       <Header />
 
       <main className="flex-1 p-6">
@@ -21,6 +26,11 @@ const App = () => {
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/elearning" element={<Elearning />} />
+
+          {/* ADMIN ROUTES */}
+          <Route path="/admin" element={<AdminPanel />} />
+          <Route path="/admin/create-student" element={<CreateStudent />} />
+          <Route path="/admin/create-teacher" element={<CreateTeacher />} />
         </Routes>
       </main>
 
