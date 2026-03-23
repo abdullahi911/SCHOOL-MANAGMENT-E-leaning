@@ -33,7 +33,14 @@ const Header = () => {
     fetchUser();
 
     const { data: listener } = supabase.auth.onAuthStateChange(() => fetchUser());
-    return () => listener.subscription.unsubscribe();
+    
+    const handleProfileUpdate = () => fetchUser();
+    window.addEventListener("profileUpdated", handleProfileUpdate);
+    
+    return () => {
+      listener.subscription.unsubscribe();
+      window.removeEventListener("profileUpdated", handleProfileUpdate);
+    };
   }, []);
 
   const handleLogout = async () => {

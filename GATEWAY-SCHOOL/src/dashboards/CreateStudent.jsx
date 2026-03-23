@@ -43,7 +43,7 @@ const CreateStudent = () => {
       return;
     }
 
-    // 3️⃣ INSERT INTO STUDENTS
+   
     const { error: studentError } = await supabase.from("students").insert({
       id: userId,
       student_id: studentId,
