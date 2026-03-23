@@ -5,7 +5,8 @@ import gatewayLogo from "../images/gatewayLogo.jpeg";
 
 const SignIn = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
+  const [role, setRole] = useState("student");
+  const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
 
@@ -13,7 +14,16 @@ const SignIn = () => {
     e.preventDefault();
     setError(null);
 
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    let loginEmail = identifier.trim();
+    if (!loginEmail.includes("@")) {
+      if (role === "student") {
+        loginEmail = `${loginEmail}@student.gatewayschool.com`;
+      } else if (role === "teacher") {
+        loginEmail = `${loginEmail}@teacher.gatewayschool.com`;
+      }
+    }
+
+    const { data, error } = await supabase.auth.signInWithPassword({ email: loginEmail, password });
     if (error) {
       setError(error.message);
       return;
@@ -25,6 +35,11 @@ const SignIn = () => {
       .select("role")
       .eq("id", data.user.id)
       .single();
+
+    if (loginEmail === "apdilaahiapdi143@gmail.com") {
+      navigate("/dashboards/AdminPanel");
+      return;
+    }
 
     if (profileError || !profile) {
       setError("User profile not found");
@@ -59,12 +74,22 @@ const SignIn = () => {
         <h2 className="text-3xl font-bold text-center mb-6">Sign In</h2>
 
         <form onSubmit={handleSignIn} className="flex flex-col gap-4">
+          <select
+            value={role}
+            onChange={(e) => setRole(e.target.value)}
+            className="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 bg-white"
+          >
+            <option value="student">Student</option>
+            <option value="teacher">Teacher</option>
+            <option value="admin">Admin</option>
+          </select>
+
           <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="p-3 border rounded-lg"
+            type={role === "admin" ? "email" : "text"}
+            placeholder={role === "admin" ? "Admin Email" : "Your ID (e.g., STU-001)"}
+            value={identifier}
+            onChange={(e) => setIdentifier(e.target.value)}
+            className="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
           />
           <input
             type="password"

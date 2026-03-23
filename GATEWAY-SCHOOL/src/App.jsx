@@ -10,6 +10,9 @@ import Elearning from "./pages/Elearning";
 import AdminPanel from "./dashboards/AdminPanel";
 import CreateStudent from "./dashboards/CreateStudent";
 import CreateTeacher from "./dashboards/CreateTeacher";
+import TeacherDashboard from "./dashboards/TeacherDashboard";
+import StudentDashboard from "./dashboards/StudentDashboard";
+import Profile from "./pages/Profile";
 
 import Header from "./component/Header";
 import Footer from "./component/Footer";
@@ -26,11 +29,15 @@ const App = () => {
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/elearning" element={<Elearning />} />
+          <Route path="/profile" element={<Profile />} />
 
-          {/* ADMIN ROUTES */}
-          <Route path="/admin" element={<AdminPanel />} />
+          {/* ADMIN & DASHBOARD ROUTES */}
+          <Route path="/dashboards/AdminPanel" element={<AdminPanel />} />
+          <Route path="/admin" element={<AdminPanel />} /> {/* Fallback just in case */}
           <Route path="/admin/create-student" element={<CreateStudent />} />
           <Route path="/admin/create-teacher" element={<CreateTeacher />} />
+          <Route path="/dashboards/TeacherDashboard" element={<TeacherDashboard />} />
+          <Route path="/dashboards/StudentDashboard" element={<StudentDashboard />} />
         </Routes>
       </main>
 

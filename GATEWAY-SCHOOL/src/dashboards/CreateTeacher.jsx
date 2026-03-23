@@ -5,16 +5,15 @@ const CreateTeacher = () => {
   const [fullName, setFullName] = useState("");
   const [teacherCode, setTeacherCode] = useState("");
   const [subject, setSubject] = useState("");
-  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
 
   const handleCreateTeacher = async (e) => {
     e.preventDefault();
 
-    // 1️⃣ CREATE AUTH USER
+    const autoEmail = `${teacherCode}@teacher.gatewayschool.com`;
     const { data, error } = await supabase.auth.signUp({
-      email,
+      email: autoEmail,
       password,
     });
     if (error) {
@@ -50,7 +49,6 @@ const CreateTeacher = () => {
     setFullName("");
     setTeacherCode("");
     setSubject("");
-    setEmail("");
     setPassword("");
   };
 
@@ -79,13 +77,7 @@ const CreateTeacher = () => {
           onChange={(e) => setSubject(e.target.value)}
           className="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
+
         <input
           type="password"
           placeholder="Password"

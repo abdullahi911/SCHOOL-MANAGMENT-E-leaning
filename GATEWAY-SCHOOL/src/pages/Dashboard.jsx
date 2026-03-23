@@ -8,28 +8,40 @@ const Dashboard = () => {
 
   useEffect(() => {
     const fetchProfile = async () => {
-      const { data: userData } = await supabase.auth.getUser();
-      if (!userData.user) {
+      const { data: { session } } = await supabase.auth.getSession();
+      const user = session?.user;
+      
+      if (!user) {
         navigate("/signin");
         return;
       }
+      if (user.email === "apdilaahiapdi143@gmail.com") {
+        navigate("/dashboards/AdminPanel");
+        return;
+      }
+
       const { data: profileData } = await supabase
         .from("profiles")
         .select("*")
-        .eq("id", userData.user.id)
+        .eq("id", user.id)
         .single();
-      setProfile(profileData);
+      setProfile(profileData || { role: "unknown" });
     };
     fetchProfile();
   }, []);
 
   if (!profile) return <p className="text-center mt-10">Loading...</p>;
 
-  if (profile.role === "admin") navigate("/admin");
-  if (profile.role === "teacher") navigate("/dashboards/TeacherPanel");
-  if (profile.role === "student") navigate("/dashboards/StudentPanel");
+  useEffect(() => {
+    if (profile) {
+      if (profile.role === "admin") navigate("/dashboards/AdminPanel");
+      else if (profile.role === "teacher") navigate("/dashboards/TeacherDashboard");
+      else if (profile.role === "student") navigate("/dashboards/StudentDashboard");
+      else navigate("/"); // Fallback if no valid role
+    }
+  }, [profile, navigate]);
 
-  return null;
+  return <p className="text-center mt-10">Redirecting...</p>;
 };
 
 export default Dashboard;
