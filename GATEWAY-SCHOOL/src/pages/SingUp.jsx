@@ -5,72 +5,50 @@ import gatewayLogo from "../images/gatewayLogo.jpeg";
 
 const SignUp = () => {
   const navigate = useNavigate();
-  const [selectedRole, setSelectedRole] = useState("admin"); // admin default
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [studentId, setStudentId] = useState("");
-  const [teacherCode, setTeacherCode] = useState("");
   const [error, setError] = useState(null);
 
   const handleSignUp = async (e) => {
     e.preventDefault();
     setError(null);
 
-    // ================= ADMIN =================
-    if (selectedRole === "admin") {
-      const { data, error } = await supabase.auth.signUp({ email, password });
-      if (error) {
-        setError(error.message);
-        return;
-      }
-      await supabase.from("profiles").insert({ id: data.user.id, role: "admin" });
-      navigate("/dashboards/AdminPanel");
+    // E-learning user registration only
+    const { data: authData, error: authError } = await supabase.auth.signUp({ 
+      email, 
+      password 
+    });
+    if (authError) {
+      setError(authError.message);
       return;
     }
 
-    // ================= STUDENT =================
-    if (selectedRole === "student") {
-      const { data: student } = await supabase
-        .from("students")
-        .select("*")
-        .eq("student_id", studentId)
-        .single();
-      if (!student) {
-        setError("Invalid Student ID");
-        return;
-      }
-      const { data, error } = await supabase.auth.signUp({ email, password });
-      if (error) {
-        setError(error.message);
-        return;
-      }
-      await supabase.from("students").update({ id: data.user.id }).eq("student_id", studentId);
-      await supabase.from("profiles").insert({ id: data.user.id, role: "student" });
-      navigate("/dashboards/StudentDashboard");
-      return;
-    }
+    const userId = authData.user.id;
+    
+    // Insert into profiles
+    const { error: profileError } = await supabase.from("profiles").insert({
+      id: userId,
+      full_name: name,
+      role: "student"
+    });
+    
+    // Generate an eLearning student ID
+    const generatedId = `E-LEARN-${Date.now().toString().slice(-6)}`;
 
-    // ================= TEACHER =================
-    if (selectedRole === "teacher") {
-      const { data: teacher } = await supabase
-        .from("teachers")
-        .select("*")
-        .eq("teacher_code", teacherCode)
-        .single();
-      if (!teacher) {
-        setError("Invalid Teacher Code");
-        return;
-      }
-      const { data, error } = await supabase.auth.signUp({ email, password });
-      if (error) {
-        setError(error.message);
-        return;
-      }
-      await supabase.from("teachers").update({ id: data.user.id }).eq("teacher_code", teacherCode);
-      await supabase.from("profiles").insert({ id: data.user.id, role: "teacher" });
-      navigate("/dashboards/TeacherDashboard");
-      return;
+    // Insert into students table, no class_id (they are not in a gateway class)
+    const { error: studentError } = await supabase.from("students").insert({
+      id: userId,
+      student_id: generatedId
+    });
+
+    if (profileError || studentError) {
+      setError("Error setting up profile. Please contact support.");
+      // Note: we don't return early here because the user is fundamentally created,
+      // but they might need to contact support if DB writes failed.
     }
+    
+    navigate("/dashboards/StudentDashboard");
   };
 
   return (
@@ -84,72 +62,57 @@ const SignUp = () => {
 
       <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
         <h2 className="text-3xl font-bold text-center mb-6">
-          Sign Up
+          Gateway E-Learning
         </h2>
-
-        <select
-          value={selectedRole}
-          onChange={(e) => setSelectedRole(e.target.value)}
-          className="p-3 border rounded-lg mb-4 w-full"
-        >
-          <option value="admin">Admin</option>
-          <option value="teacher">Teacher</option>
-          <option value="student">Student</option>
-        </select>
+        <p className="text-gray-500 text-center mb-6">Sign up to purchase courses and learn online.</p>
 
         <form onSubmit={handleSignUp} className="flex flex-col gap-4">
 
-          {selectedRole === "student" && (
-            <input
-              type="text"
-              placeholder="Student ID"
-              value={studentId}
-              onChange={(e) => setStudentId(e.target.value)}
-              className="p-3 border rounded-lg"
-            />
-          )}
-
-          {selectedRole === "teacher" && (
-            <input
-              type="text"
-              placeholder="Teacher Code"
-              value={teacherCode}
-              onChange={(e) => setTeacherCode(e.target.value)}
-              className="p-3 border rounded-lg"
-            />
-          )}
+          <input
+            type="text"
+            placeholder="Full Name"
+            required
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+          />
 
           <input
             type="email"
-            placeholder="Email"
+            placeholder="Email Address"
+            required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="p-3 border rounded-lg"
+            className="p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition-all"
           />
 
           <input
             type="password"
             placeholder="Password"
+            required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="p-3 border rounded-lg"
+            className="p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition-all"
           />
 
           <button className="bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition">
-            Sign Up
+            Create Account
           </button>
         </form>
 
-        {error && <p className="text-red-500 mt-4 text-center">{error}</p>}
+        {error && <p className="text-red-500 mt-4 text-center text-sm">{error}</p>}
 
-        <p className="mt-6 text-center">
+        <p className="mt-6 text-center text-sm">
           Already have an account?{" "}
           <span
-            className="text-green-600 font-semibold cursor-pointer hover:underline"
+            className="text-blue-600 font-semibold cursor-pointer hover:underline"
             onClick={() => navigate("/signin")}
           >
             Sign In
           </span>
+        </p>
+        <p className="mt-4 text-center text-xs text-gray-400">
+          *If you are an enrolled Gateway student or teacher, your account is provided by the admin. <span onClick={() => navigate("/signin")} className="underline cursor-pointer">Login here using your ID.</span>
         </p>
       </div>
     </div>

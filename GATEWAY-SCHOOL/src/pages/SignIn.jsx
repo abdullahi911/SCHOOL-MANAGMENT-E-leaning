@@ -14,13 +14,16 @@ const SignIn = () => {
     e.preventDefault();
     setError(null);
 
-    let loginEmail = identifier.trim();
-    if (!loginEmail.includes("@")) {
-      if (role === "student") {
-        loginEmail = `${loginEmail}@student.gatewayschool.com`;
-      } else if (role === "teacher") {
-        loginEmail = `${loginEmail}@teacher.gatewayschool.com`;
-      }
+    let loginEmail = "";
+
+    if (role === "admin") {
+      loginEmail = identifier.trim();
+    } else if (role === "student") {
+      const sanitizedId = identifier.replace(/\s+/g, '').toLowerCase();
+      loginEmail = `${sanitizedId}@student.gatewayschool.com`;
+    } else if (role === "teacher") {
+      const sanitizedId = identifier.replace(/\s+/g, '').toLowerCase();
+      loginEmail = `${sanitizedId}@teacher.gatewayschool.com`;
     }
 
     const { data, error } = await supabase.auth.signInWithPassword({ email: loginEmail, password });
@@ -35,11 +38,6 @@ const SignIn = () => {
       .select("role")
       .eq("id", data.user.id)
       .single();
-
-    if (loginEmail === "apdilaahiapdi143@gmail.com") {
-      navigate("/dashboards/AdminPanel");
-      return;
-    }
 
     if (profileError || !profile) {
       setError("User profile not found");
