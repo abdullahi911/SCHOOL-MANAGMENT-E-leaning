@@ -30,16 +30,17 @@ const Dashboard = () => {
     fetchProfile();
   }, []);
 
-  if (!profile) return <p className="text-center mt-10">Loading...</p>;
-
   useEffect(() => {
     if (profile) {
-      if (profile.role === "admin") navigate("/dashboards/AdminPanel");
-      else if (profile.role === "teacher") navigate("/dashboards/TeacherDashboard");
-      else if (profile.role === "student") navigate("/dashboards/StudentDashboard");
+      const pRole = profile.role?.trim().toLowerCase();
+      if (pRole === "admin") navigate("/dashboards/AdminPanel");
+      else if (pRole === "teacher") navigate("/dashboards/TeacherDashboard");
+      else if (pRole === "student") navigate("/dashboards/StudentDashboard");
       else navigate("/"); // Fallback if no valid role
     }
   }, [profile, navigate]);
+
+  if (!profile) return <p className="text-center mt-10">Loading...</p>;
 
   return <p className="text-center mt-10">Redirecting...</p>;
 };

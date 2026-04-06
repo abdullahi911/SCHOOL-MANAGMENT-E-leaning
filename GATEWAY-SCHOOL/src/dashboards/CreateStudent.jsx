@@ -85,11 +85,19 @@ const CreateStudent = () => {
           className="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
         >
           <option value="">Select Class (Optional for now)</option>
-          {classes.map((cls) => (
-            <option key={cls.id} value={cls.id}>
-              {cls.class_name}
-            </option>
-          ))}
+          {["Form 1", "Form 2", "Form 3", "Form 4"].map((formLevel) => {
+            const levelClasses = classes.filter((c) => c.class_name.startsWith(formLevel));
+            if (levelClasses.length === 0) return null;
+            return (
+              <optgroup key={formLevel} label={formLevel}>
+                {levelClasses.map((cls) => (
+                  <option key={cls.id} value={cls.id}>
+                    {cls.class_name}
+                  </option>
+                ))}
+              </optgroup>
+            );
+          })}
         </select>
         <input
           type="password"

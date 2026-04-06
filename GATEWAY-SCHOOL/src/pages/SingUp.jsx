@@ -52,7 +52,7 @@ const SignUp = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 dark:bg-slate-800">
       <img
         src={gatewayLogo}
         alt="Gateway Logo"
@@ -60,11 +60,11 @@ const SignUp = () => {
         onClick={() => navigate("/")}
       />
 
-      <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
+      <div className="bg-white dark:bg-slate-700 p-8 rounded-xl shadow-lg w-full max-w-md">
         <h2 className="text-3xl font-bold text-center mb-6">
           Gateway E-Learning
         </h2>
-        <p className="text-gray-500 text-center mb-6">Sign up to purchase courses and learn online.</p>
+        <p className="text-gray-500 dark:text-gray-300 text-center mb-6">Sign up to purchase courses and learn online.</p>
 
         <form onSubmit={handleSignUp} className="flex flex-col gap-4">
 
@@ -74,7 +74,7 @@ const SignUp = () => {
             required
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+            className="p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition-all dark:bg-slate-600 dark:text-white dark:bg-slate-600 dark:text-white dark:border-slate-500"
           />
 
           <input
@@ -83,7 +83,7 @@ const SignUp = () => {
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+            className="p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition-all dark:bg-slate-600 dark:text-white dark:bg-slate-600 dark:text-white dark:border-slate-500"
           />
 
           <input
@@ -92,7 +92,7 @@ const SignUp = () => {
             required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+            className="p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition-all dark:bg-slate-600 dark:text-white dark:bg-slate-600 dark:text-white dark:border-slate-500"
           />
 
           <button className="bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition">

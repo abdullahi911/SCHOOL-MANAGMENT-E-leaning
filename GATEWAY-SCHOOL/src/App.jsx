@@ -19,7 +19,7 @@ import Footer from "./component/Footer";
 
 const App = () => {
   return (
-    <div className="flex flex-col min-h-screen bg-amber-50">
+    <div className="flex flex-col min-h-screen bg-amber-50 dark:bg-slate-900 transition-colors duration-300">
       <Header />
 
       <main className="flex-1 p-6">

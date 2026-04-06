@@ -1,13 +1,29 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import supabase from "../lib/supabase";
 import hero from "../images/gatewayherro.jpg";
 import learning from "../images/gatway learning.jpg";
 import students from "../images/gatewaystudents.jpg";
 import sports from "../images/gatewaysport.jpg";
 
 const Home = () => {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user || null);
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user || null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
   return (
-    <div className="bg-gray-50">
+    <div className="bg-gray-50 dark:bg-slate-800 transition-colors duration-300">
 
       <section
         className="relative h-[90vh] flex items-center justify-center text-center text-white"
@@ -22,7 +38,7 @@ const Home = () => {
           <h1 className="text-4xl md:text-6xl font-bold mb-4">
             Welcome to Gateway School
           </h1>
-          <p className="text-lg md:text-xl mb-6 text-gray-200">
+          <p className="text-lg md:text-xl mb-6 text-gray-200 dark:text-gray-300">
             Empowering students with quality education, modern learning, and future-ready skills.
           </p>
           <div className="flex justify-center gap-4">
@@ -35,21 +51,31 @@ const Home = () => {
             </Link>
 
             {/* Join Gateway → Signup */}
-            <Link
-              to="/signup"
-              className="border border-white px-6 py-3 rounded-lg hover:bg-white hover:text-black transition"
-            >
-              Join Gateway
-            </Link>
+            {!user && (
+              <Link
+                to="/signup"
+                className="border border-white px-6 py-3 rounded-lg hover:bg-white hover:text-black dark:hover:text-slate-900 transition"
+              >
+                Join Gateway
+              </Link>
+            )}
+            {user && (
+              <Link
+                to="/dashboard"
+                className="border border-white px-6 py-3 rounded-lg hover:bg-white hover:text-black dark:hover:text-slate-900 transition"
+              >
+                Go to Dashboard
+              </Link>
+            )}
           </div>
         </div>
       </section>
 
       <section className="max-w-7xl mx-auto px-6 py-16 grid md:grid-cols-2 gap-10 items-center">
-        <img src={learning} alt="learning" className="rounded-xl shadow-lg" />
+        <img src={learning} alt="learning" className="rounded-xl shadow-lg dark:brightness-90" />
         <div>
-          <h2 className="text-3xl font-bold mb-4 text-blue-900">Modern E-Learning</h2>
-          <p className="text-gray-600 mb-4">
+          <h2 className="text-3xl font-bold mb-4 text-blue-900 dark:text-blue-400">Modern E-Learning</h2>
+          <p className="text-gray-600 dark:text-gray-300 mb-4">
             Our platform provides students with digital learning tools, interactive courses, and access to quality education anytime, anywhere.
           </p>
           <Link
@@ -61,23 +87,23 @@ const Home = () => {
         </div>
       </section>
 
-      <section className="bg-white py-16">
+      <section className="bg-white dark:bg-slate-700 py-16 transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-10 items-center">
           <div>
-            <h2 className="text-3xl font-bold mb-4 text-blue-900">Student Life</h2>
-            <p className="text-gray-600 mb-4">
+            <h2 className="text-3xl font-bold mb-4 text-blue-900 dark:text-blue-400">Student Life</h2>
+            <p className="text-gray-600 dark:text-gray-300 mb-4">
               We create a supportive environment where students grow, collaborate, and achieve their academic goals.
             </p>
           </div>
-          <img src={students} alt="students" className="rounded-xl shadow-lg" />
+          <img src={students} alt="students" className="rounded-xl shadow-lg dark:brightness-90" />
         </div>
       </section>
 
       <section className="max-w-7xl mx-auto px-6 py-16 grid md:grid-cols-2 gap-10 items-center">
-        <img src={sports} alt="sports" className="rounded-xl shadow-lg" />
+        <img src={sports} alt="sports" className="rounded-xl shadow-lg dark:brightness-90" />
         <div>
-          <h2 className="text-3xl font-bold mb-4 text-blue-900">Sports & Activities</h2>
-          <p className="text-gray-600 mb-4">
+          <h2 className="text-3xl font-bold mb-4 text-blue-900 dark:text-blue-400">Sports & Activities</h2>
+          <p className="text-gray-600 dark:text-gray-300 mb-4">
             We encourage physical fitness and teamwork through sports, helping students develop discipline and confidence.
           </p>
         </div>

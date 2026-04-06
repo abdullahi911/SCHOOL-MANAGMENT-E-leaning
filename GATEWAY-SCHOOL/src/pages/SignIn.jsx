@@ -44,7 +44,8 @@ const SignIn = () => {
       return;
     }
 
-    switch (profile.role) {
+    const pRole = profile.role?.trim().toLowerCase();
+    switch (pRole) {
       case "admin":
         navigate("/dashboards/AdminPanel");
         break;
@@ -60,7 +61,7 @@ const SignIn = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 dark:bg-slate-800">
       <img
         src={gatewayLogo}
         alt="Gateway Logo"
@@ -68,14 +69,14 @@ const SignIn = () => {
         onClick={() => navigate("/")}
       />
 
-      <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
+      <div className="bg-white dark:bg-slate-700 p-8 rounded-xl shadow-lg w-full max-w-md">
         <h2 className="text-3xl font-bold text-center mb-6">Sign In</h2>
 
         <form onSubmit={handleSignIn} className="flex flex-col gap-4">
           <select
             value={role}
             onChange={(e) => setRole(e.target.value)}
-            className="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 bg-white"
+            className="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 bg-white dark:bg-slate-700 dark:bg-slate-600 dark:text-white dark:border-slate-500"
           >
             <option value="student">Student</option>
             <option value="teacher">Teacher</option>
@@ -87,14 +88,14 @@ const SignIn = () => {
             placeholder={role === "admin" ? "Admin Email" : "Your ID (e.g., STU-001)"}
             value={identifier}
             onChange={(e) => setIdentifier(e.target.value)}
-            className="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 dark:bg-slate-600 dark:text-white dark:bg-slate-600 dark:text-white dark:border-slate-500"
           />
           <input
             type="password"
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="p-3 border rounded-lg"
+            className="p-3 border rounded-lg dark:bg-slate-600 dark:text-white dark:border-slate-500"
           />
           <button className="bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700 transition">
             Sign In

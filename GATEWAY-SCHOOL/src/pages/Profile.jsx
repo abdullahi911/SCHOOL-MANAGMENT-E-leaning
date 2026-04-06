@@ -17,7 +17,13 @@ const Profile = () => {
 
   const fetchProfile = async () => {
     setLoading(true);
-    const { data: { user } } = await supabase.auth.getUser();
+    const { data: { session } } = await supabase.auth.getSession();
+    const user = session?.user;
+
+    if (!user) {
+      setLoading(false);
+      return;
+    }
 
     const { data } = await supabase
       .from("profiles")
@@ -56,7 +62,7 @@ const Profile = () => {
       .from("avatars")
       .getPublicUrl(filePath);
 
-    return data.publicUrl;
+    return `${data.publicUrl}?t=${Date.now()}`;
   };
 
   const handleSubmit = async (e) => {
@@ -64,7 +70,14 @@ const Profile = () => {
     setSaving(true);
     setMessage(null);
 
-    const { data: { user } } = await supabase.auth.getUser();
+    const { data: { session } } = await supabase.auth.getSession();
+    const user = session?.user;
+    
+    if (!user) {
+      setMessage({ type: "error", text: "Not authenticated" });
+      setSaving(false);
+      return;
+    }
 
     try {
       const avatar_url = await uploadAvatar(user.id);
@@ -153,9 +166,13 @@ const Profile = () => {
             onChange={(e) =>
               setProfile({ ...profile, full_name: e.target.value })
             }
-            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+            className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none ${profile.role !== "admin" ? "bg-gray-100 cursor-not-allowed text-gray-500 opacity-70" : ""}`}
             placeholder="Enter your name"
+            disabled={profile.role !== "admin"}
           />
+          {profile.role !== "admin" && (
+            <p className="text-xs text-gray-500 mt-1 mt-1">* Only an administrator can change your registered name.</p>
+          )}
         </div>
 
         {/* BUTTON */}

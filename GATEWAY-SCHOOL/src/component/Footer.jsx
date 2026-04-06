@@ -1,14 +1,36 @@
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { FaFacebookF, FaTiktok } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
+import supabase from "../lib/supabase";
 
 export default function Footer() {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user || null);
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user || null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
   const navLinks = [
     { name: "Home", to: "/" },
     { name: "E-Learning", to: "/elearning" },
     { name: "Dashboard", to: "/dashboard" },
-    { name: "Sign In", to: "/signin" },
-    { name: "Sign Up", to: "/signup" },
+    ...(user
+      ? []
+      : [
+          { name: "Sign In", to: "/signin" },
+          { name: "Sign Up", to: "/signup" },
+        ]),
   ];
 
   return (

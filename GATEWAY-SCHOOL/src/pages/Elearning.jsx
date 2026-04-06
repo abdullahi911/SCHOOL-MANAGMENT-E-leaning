@@ -134,10 +134,10 @@ const Elearning = () => {
     const { data, error } = await supabase.from('courses').insert([courseData]).select();
 
     if (error) {
-      console.error('Error creating course in Supabase. Using local state fallback.', error);
-      // Fallback: add to UI anyway if DB lacks the table so they can test it instantly
-      const localCourse = { ...courseData, id: Date.now().toString() };
-      setCourses([...courses, localCourse]);
+      console.error('Error creating course in Supabase:', error);
+      alert('Error creating course: ' + error.message + ' (Did you create the courses table properly?)');
+      setIsCreating(false);
+      return;
     } else if (data && data.length > 0) {
       setCourses([...courses, data[0]]);
     }
@@ -191,16 +191,16 @@ const Elearning = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-blue-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-blue-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         
         {/* Improved Hero Section with Logo */}
         <div className="flex flex-col items-center text-center mb-16 space-y-6">
-          <img src={gatewayLogo} alt="Gateway School Logo" className="w-32 h-32 object-contain drop-shadow-lg rounded-2xl bg-white p-2" />
+          <img src={gatewayLogo} alt="Gateway School Logo" className="w-32 h-32 object-contain drop-shadow-lg rounded-2xl bg-white dark:bg-slate-700 p-2" />
           <h1 className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-700 to-indigo-600 tracking-tight drop-shadow-sm">
             Gateway School E-Learning
           </h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto font-medium">
+          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto font-medium">
             Expand your knowledge with our premium courses led by expert instructors. 
             Enjoy high-quality, engaging video content.
           </p>
@@ -227,7 +227,7 @@ const Elearning = () => {
             {courses.map((course) => (
               <div 
                 key={course.id} 
-                className="group flex flex-col bg-white rounded-3xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 border border-gray-100"
+                className="group flex flex-col bg-white dark:bg-slate-700 rounded-3xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 border border-gray-100 dark:border-slate-600"
               >
                 {/* Image Section */}
                 <div 
@@ -248,30 +248,30 @@ const Elearning = () => {
                   
                   {/* Price Tag (Hidden for Admins/Teachers) */}
                   {userRole !== 'admin' && userRole !== 'teacher' && (
-                    <div className="absolute top-4 right-4 bg-white/95 backdrop-blur-sm px-4 py-1.5 rounded-full shadow-lg">
+                    <div className="absolute top-4 right-4 bg-white dark:bg-slate-700/95 backdrop-blur-sm px-4 py-1.5 rounded-full shadow-lg">
                       <span className="text-xl font-black text-indigo-700">${course.price}</span>
                     </div>
                   )}
                 </div>
 
                 {/* Content Section */}
-                <div className="p-8 flex flex-col flex-1 relative bg-white">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-2 line-clamp-2 leading-tight">
+                <div className="p-8 flex flex-col flex-1 relative bg-white dark:bg-slate-700">
+                  <h3 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2 line-clamp-2 leading-tight">
                     {course.title}
                   </h3>
                   
                   <div className="flex items-center gap-3 mb-6">
-                    <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold text-lg">
+                    <div className="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center text-indigo-700 font-bold text-lg">
                       {course.instructor.charAt(0)}
                     </div>
-                    <span className="text-gray-600 font-medium">{course.instructor}</span>
+                    <span className="text-gray-600 dark:text-gray-300 font-medium">{course.instructor}</span>
                   </div>
 
                   <div className="mt-auto flex flex-col gap-3">
                     {/* Watch Intro Button */}
                     <button
                       onClick={() => handleWatchIntro(course)}
-                      className="w-full py-4 bg-indigo-50 text-indigo-700 font-bold rounded-xl hover:bg-indigo-600 hover:text-white transition-colors duration-300 flex items-center justify-center gap-2"
+                      className="w-full py-4 bg-indigo-50 dark:bg-slate-600 text-indigo-700 font-bold rounded-xl hover:bg-indigo-600 hover:text-white transition-colors duration-300 flex items-center justify-center gap-2"
                     >
                       <IoPlayCircleOutline className="w-6 h-6" />
                       Watch Intro Video
@@ -297,13 +297,13 @@ const Elearning = () => {
       {/* Intro Video Modal */}
       {showVideoModal && activeCourse && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-md p-4 transition-all">
-          <div className="bg-white rounded-3xl overflow-hidden shadow-2xl w-full max-w-5xl flex flex-col transform">
+          <div className="bg-white dark:bg-slate-700 rounded-3xl overflow-hidden shadow-2xl w-full max-w-5xl flex flex-col transform">
             
             {/* Modal Header */}
-            <div className="flex justify-between items-center px-8 py-5 border-b border-gray-100 bg-white">
+            <div className="flex justify-between items-center px-8 py-5 border-b border-gray-100 dark:border-slate-600 bg-white dark:bg-slate-700">
               <div>
-                <h2 className="text-2xl font-bold text-gray-900">{activeCourse.title} - Intro Video</h2>
-                <p className="text-gray-500 font-medium">Instructor: {activeCourse.instructor}</p>
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{activeCourse.title} - Intro Video</h2>
+                <p className="text-gray-500 dark:text-gray-300 font-medium">Instructor: {activeCourse.instructor}</p>
               </div>
               <button 
                 onClick={() => setShowVideoModal(false)}
@@ -320,8 +320,8 @@ const Elearning = () => {
             </div>
 
             {/* Modal Footer (Enroll Action) */}
-            <div className="px-8 py-6 bg-gray-50 flex flex-col sm:flex-row justify-between items-center gap-4">
-              <span className="text-gray-600 font-medium text-center sm:text-left">
+            <div className="px-8 py-6 bg-gray-50 dark:bg-slate-800 flex flex-col sm:flex-row justify-between items-center gap-4">
+              <span className="text-gray-600 dark:text-gray-300 font-medium text-center sm:text-left">
                 {userRole === 'admin' || userRole === 'teacher' 
                   ? "You have full access to this course." 
                   : "Did you like the intro? Enroll now to unlock the full course modules!"}
@@ -330,7 +330,7 @@ const Elearning = () => {
               <div className="flex gap-4 w-full sm:w-auto">
                 <button 
                   onClick={() => setShowVideoModal(false)}
-                  className="flex-1 sm:flex-none px-6 py-3 rounded-xl font-bold text-gray-700 bg-white border-2 border-gray-200 hover:bg-gray-100 hover:border-gray-300 transition-all"
+                  className="flex-1 sm:flex-none px-6 py-3 rounded-xl font-bold text-gray-700 dark:text-gray-200 bg-white dark:bg-slate-700 border-2 border-gray-200 dark:border-slate-600 hover:bg-gray-100 hover:border-gray-300 dark:border-slate-500 transition-all"
                 >
                   Close
                 </button>
@@ -366,9 +366,9 @@ const Elearning = () => {
       {/* COURSE CREATION MODAL */}
       {showCreateModal && (userRole === 'admin' || userRole === 'teacher') && (
         <div className="fixed inset-0 z-[110] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-          <div className="bg-white rounded-3xl overflow-hidden shadow-2xl w-full max-w-xl">
-            <div className="p-6 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
-              <h2 className="text-2xl font-bold text-gray-800">Create New Course</h2>
+          <div className="bg-white dark:bg-slate-700 rounded-3xl overflow-hidden shadow-2xl w-full max-w-xl">
+            <div className="p-6 border-b border-gray-100 dark:border-slate-600 bg-gray-50 dark:bg-slate-800 flex justify-between items-center">
+              <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-200">Create New Course</h2>
               <button onClick={() => setShowCreateModal(false)} className="text-gray-400 hover:text-red-500">
                 <IoCloseOutline className="w-7 h-7" />
               </button>
@@ -376,32 +376,32 @@ const Elearning = () => {
 
             <form onSubmit={handleCreateCourse} className="p-8 space-y-5">
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1">Course Title</label>
+                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1">Course Title</label>
                 <input 
                   required
                   type="text" 
                   value={newCourse.title}
                   onChange={(e) => setNewCourse({...newCourse, title: e.target.value})}
-                  className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
+                  className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-slate-500 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
                   placeholder="e.g. Advanced Mathematics"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1">Teacher / Instructor Name</label>
+                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1">Teacher / Instructor Name</label>
                 <input 
                   required
                   type="text" 
                   value={newCourse.instructor}
                   onChange={(e) => setNewCourse({...newCourse, instructor: e.target.value})}
-                  className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
+                  className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-slate-500 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
                   placeholder="e.g. Ustaad Ali"
                 />
               </div>
 
               <div className="flex gap-4">
                 <div className="flex-1">
-                  <label className="block text-sm font-semibold text-gray-700 mb-1">Cost ($)</label>
+                  <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1">Cost ($)</label>
                   <input 
                     required
                     type="number" 
@@ -409,30 +409,30 @@ const Elearning = () => {
                     step="0.01"
                     value={newCourse.price}
                     onChange={(e) => setNewCourse({...newCourse, price: e.target.value})}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
+                    className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-slate-500 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
                     placeholder="18"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-1">Intro Video URL (YouTube Link)</label>
+                <label className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1">Intro Video URL (YouTube Link)</label>
                 <input 
                   required
                   type="url" 
                   value={newCourse.video_url}
                   onChange={(e) => setNewCourse({...newCourse, video_url: e.target.value})}
-                  className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
+                  className="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-slate-500 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all"
                   placeholder="https://www.youtube.com/watch?v=..."
                 />
-                <p className="text-xs text-gray-500 mt-2">Example: https://www.youtube.com/watch?v=tVzUXW6nD8I</p>
+                <p className="text-xs text-gray-500 dark:text-gray-300 mt-2">Example: https://www.youtube.com/watch?v=tVzUXW6nD8I</p>
               </div>
 
-              <div className="pt-4 border-t border-gray-100 flex justify-end gap-3">
+              <div className="pt-4 border-t border-gray-100 dark:border-slate-600 flex justify-end gap-3">
                 <button 
                   type="button"
                   onClick={() => setShowCreateModal(false)}
-                  className="px-6 py-3 rounded-xl font-semibold text-gray-600 hover:bg-gray-100 transition-colors"
+                  className="px-6 py-3 rounded-xl font-semibold text-gray-600 dark:text-gray-300 hover:bg-gray-100 transition-colors"
                 >
                   Cancel
                 </button>
