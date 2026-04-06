@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
-  base: process.env.BASE_URL || '/SCHOOL-MANAGMENT-E-leaning',
+  base: import.meta.env.VITE_BASE_URL || '/SCHOOL-MANAGMENT-E-leaning/',
   plugins: [
     react(),
     tailwindcss(),
