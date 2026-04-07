@@ -7,5 +7,5 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
-  base: import.meta.env.VITE_BASE_URL || '/SCHOOL-MANAGMENT-E-leaning/',
+
 })
