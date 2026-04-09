@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import supabase from '../lib/supabase';
 import { useNavigate } from 'react-router-dom';
 import { IoPlayCircleOutline, IoCloseOutline, IoAddCircleOutline } from 'react-icons/io5';
-import gatewayLogo from '../images/gatewayLogo.jpeg';
+import gatewayLogo from '../images/gatewaylogo.jpeg';
 
 // Unique standard YouTube embedded videos for each subject
 const FALLBACK_COURSES = [

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import supabase from "../lib/supabase";
 import { useNavigate } from "react-router-dom";
 import { FiBell, FiUser, FiInfo, FiBookOpen } from "react-icons/fi";
-import gatewayLogo from "../images/gatewayLogo.jpeg";
+import gatewayLogo from "../images/gatewaylogo.jpeg";
 
 const StudentDashboard = () => {
   const navigate = useNavigate();

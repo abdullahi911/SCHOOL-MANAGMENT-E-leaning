@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import supabase from "../lib/supabase";
 import { useNavigate } from "react-router-dom";
-import gatewayLogo from "../images/gatewayLogo.jpeg";
+import gatewayLogo from "../images/gatewaylogo.jpeg";
 
 const SignIn = () => {
   const navigate = useNavigate();

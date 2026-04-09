@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import supabase from "../lib/supabase";
 import { useNavigate } from "react-router-dom";
 import { FiBook, FiBell, FiUsers, FiMessageSquare, FiInfo } from "react-icons/fi";
-import gatewayLogo from "../images/gatewayLogo.jpeg";
+import gatewayLogo from "../images/gatewaylogo.jpeg";
 
 const StatCard = ({ title, value, icon, colorClass }) => (
   <div className="bg-white dark:bg-slate-700 p-6 rounded-2xl shadow-xl shadow-gray-200/50 border border-gray-100 dark:border-slate-600 flex items-center justify-between hover:scale-[1.02] transition-transform duration-300">

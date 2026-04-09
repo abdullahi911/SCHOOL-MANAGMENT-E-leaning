@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import supabase from "../lib/supabase";
-import gatewayLogo from "../images/gatewayLogo.jpeg";
+import gatewayLogo from "../images/gatewaylogo.jpeg";
 import { CiMenuBurger } from "react-icons/ci";
 import { IoMdClose } from "react-icons/io";
 import { FiSun, FiMoon } from "react-icons/fi";
